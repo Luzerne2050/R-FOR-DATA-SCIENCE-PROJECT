@@ -5,3 +5,25 @@ date: "2026-10-31"
 output: html_document
 ---
 
+install.packages("RPostgres")
+library(DBI)
+library(RPostgres)
+
+# Establish connection
+con <- dbConnect(
+  RPostgres::Postgres(),
+  host     = "localhost",
+  port     = 5432,
+  dbname   = "pgp_chat",
+  user     = "postgres",
+  password = "arthur"
+)
+
+# Query data
+df <- dbGetQuery(con, "SELECT * FROM users")
+df
+
+dt <- dbGetQuery(con, "SELECT id,username, email FROM users" )
+dt
+# Close connection when done
+dbDisconnect(con)
