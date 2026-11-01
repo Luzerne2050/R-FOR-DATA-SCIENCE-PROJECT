@@ -27,3 +27,56 @@ dt <- dbGetQuery(con, "SELECT id,username, email FROM users" )
 dt
 # Close connection when done
 dbDisconnect(con)
+
+# Install the haven package
+# haven is used to import statistical files
+# such as SPSS, STATA, and SAS
+
+install.packages("haven")
+
+
+# Install readxl package
+# readxl imports Excel files (.xlsx)
+
+install.packages("readxl")
+
+#Load Libraries into memory
+library(haven)
+# Load readxl package
+library(readxl)
+
+getwd()
+
+# Create sample data log class1
+
+data_class1 <- data.frame(
+  student_id = c("MBI001", "MBI002", "MBI003", "MBI006", "MBI004", "MBI005", "MBI008", "MBI0010", "MBI0015"),
+  department = c("Accounting", "Finance", "HR", "IT", "Finance", NA, "IT", "HR", "Accounting"),
+  status = c("PASS", "FAIL", "PASS", "FAIL", "PASS", "PASS", "FAIL", "SUCCESS", "FAIL"),
+  login_time = c("07:30", "08:00", "08:10", "08:15", "09:00", "09:20", "09:30", "10:00", "11:00")
+  )
+
+#adding ip variable
+data_class1$ip_address <- c(
+  "192.168.1.10",
+  "10.0.0.5",
+  "172.16.0.8",
+  "192.168.1.10",
+  "10.0.0.9",
+  "10.0.0.5",
+  "172.16.0.3",
+  "192.168.1.11",
+  "192.168.1.10"
+)
+
+#Save as SPSS file (.sav)
+write_sav(data_class1, "data_logs.sav")
+
+read_sav("data_logs.sav")
+list.files()
+
+data_class1 <- read_sav("data_logs.sav")
+
+data_class1[is.na(data_class1$department), ]
+data_class1[data_class1$department == "", ]
+data_class1[is.na(data_class1$department) | data_class1$department == "", ]
