@@ -1,0 +1,507 @@
+---
+title: "ASSIGNMENT 1 OF R FOR DATA SCIENCE"
+author: "INGABIRE"
+date: "2026-10-31"
+output: html_document
+---
+```{r}
+summary(cars)
+
+```
+##Data structure (Vectors, Factors, Lists, Data frame, matrix and arrays)
+#Vector: Example 1 of Numeric
+```{r}
+x <- c(0.5, 0.6) 
+age<-c(20,35,32,29)
+summary(age)
+```
+
+#Example2
+```{r}
+age<-c(35,24,18,24)
+mean(age)
+```
+
+#Logical
+```{r}
+x <- c(TRUE,FALSE)
+x <- c(T, F) 
+x
+```
+
+#Character
+```{r}
+x <- c("a", "b", "c" )
+x
+class<-c("M","F","F","M")
+class
+```
+
+#Integer
+```{r}
+x <- 9:29 
+x
+```
+
+#Complex
+```{r}
+x <- c(1+0i, 2+4i)
+x
+```
+
+#Matrix and operation within matrices
+```{r}
+(x<- matrix(1:6, nrow = 2, ncol = 3))
+```
+
+```{r}
+x
+```
+
+```{r}
+(y<-matrix(1:6, nrow = 3, ncol = 2))
+```
+
+```{r}
+x%*%y
+```
+#List
+```{r}
+(x <- list(1, "a", TRUE, 1 + 4i))
+```
+
+```{r}
+x
+```
+
+#Factor
+```{r}
+x <- factor(c("yes", "yes", "no", "yes", "no"))
+x
+```
+#Create a vector with NAs in it
+
+```{r}
+x <- c(1, 2, NA, 10, 3) 
+x
+```
+
+#Return a logical vector indicating which elements are NA
+```{r}
+is.na(x)
+```
+
+
+```{r}
+x <- c(1, 2, 4, "NA", 5)  
+bad <- is.na(x)  
+print(bad)
+```
+
+
+```{r}
+x[!bad]
+```
+#What if there are multiple R objects and you want to take the subset with no missing values in any of those objects?
+```{r}
+x <- c(1, 2, NA, 4, NA, 5) 
+y <- c("a", "b", NA, "d", NA, "f")  
+good <- complete.cases(x, y)  
+good
+```
+#Coercion
+#If character is present, in a vector, R convert everything in the vector to character strings.
+#If a vector only contains logical and numbers, R will convert the logical to numbers, Every true becomes a 1, and every FALSE becomes 0
+```{r}
+sum(c(TRUE,TRUE,FALSE,FALSE,FALSE))
+```
+#Create data
+Create data Using data frame Data frame is more general than matrix How? Because data frame can contain different modes of data (Numeric, character and so on) Similar to what you can see in SPSS, SAS,…
+```{r}
+studentID<-c(1,2,3,4,5)
+math_score<-c(12,17,10,9,NA)
+gender<-c("M","F","M","M","F")
+it_score<-c(13,18,11,10,19)
+scoredata<-data.frame(studentID,gender,math_score,it_score)
+scoredata
+```
+
+#checking the format of dataset
+```{r}
+View(scoredata)
+```
+
+##Create data from keyboard
+Steps 1. Create data frame (or matrix) with variable names 
+2. Invoke the text editor in the data objected created at first step
+```{r}
+data_class2<-data.frame(height=numeric(0),weight=numeric(0),bmi=numeric(0))
+data_class2<-edit(data_class2)
+```
+
+##Data Importation
+#R hallows us to import data from different sources (It can be text file, spreadsheet, or database)
+
+#Data from excel
+#Data statistical packages (SAS, SPSS, Stata)
+#Data from Text files (ASCII, XML, Webscraping)
+#Data from database management systems (SQL,MySQL, Oracle, Access)
+
+##Importing data from statistical packages(Excel)
+```{r}
+library(readxl)
+data_class <- read_excel("C:/Users/USER/Desktop/Dataclass(height-weight).xlsx")
+variable.names(data_class)
+```
+
+#Displaying the first rows of your data
+```{r}
+head(data_class)
+```
+
+#Displaying the last rows of data
+```{r}
+tail(data_class)
+```
+#Displaying data from row 10 t0 20
+
+```{r}
+data_class[10:20,]
+```
+#Summary statistics on variable weight
+```{r}
+summary(data_class$WEIGHT)
+```
+#Length of my Dataclass
+```{r}
+length(data_class$HEIGHT)
+```
+#Removing the first column
+```{r}
+data_class[,-1]
+```
+
+```{r}
+data_class$WEIGHT
+```
+#Using dataset built in R set
+```{r}
+data("airquality")
+variable.names(airquality)
+```
+#Shape of dataset
+```{r}
+str(airquality)
+```
+
+#Examine numerical variable using common summary
+```{r}
+data_class
+```
+#Summary statistics
+```{r}
+summary(data_class)
+```
+
+```{r}
+str(data_class)
+```
+#calculating mean of each row
+```{r}
+apply(data_class,1,mean)
+```
+
+#calculating the standard deviation for each column
+```{r}
+apply(data_class,2,sd)
+```
+#calculate the mean (average) and standard deviation (spread) for the HEIGHT and WEIGHT columns, and combine them into one small vector so we can read both results together.
+
+```{r}
+c(mean(data_class$HEIGHT),sd(data_class$HEIGHT))
+```
+
+```{r}
+c(mean(data_class$WEIGHT),sd(data_class$WEIGHT))
+```
+
+```{r}
+c(Mean=mean(data_class$HEIGHT),SD=sd(data_class$HEIGHT))
+```
+
+```{r}
+c(Mean=mean(data_class$WEIGHT),SD=sd(data_class$WEIGHT))
+```
+#Relationship between a categorical and a continuous variable
+```{r}
+data("iris")
+head(iris)
+```
+#Calculating average on different variable names
+
+```{r}
+mean(iris$Petal.Length)
+```
+
+```{r}
+mean(iris$Petal.Length[iris$Species=="setosa"])
+```
+
+```{r}
+mean(iris$Petal.Length[iris$Species=="versicolor"])
+```
+
+```{r}
+mean(iris$Petal.Length[iris$Species=="virginica"])
+```
+#calculating average by using shortcut way
+```{r}
+by(iris$Petal.Length,iris$Species,mean)
+```
+#calculating standard deviation
+```{r}
+by(iris$Petal.Length,iris$Species,sd)
+```
+#summary statistics
+```{r}
+by(iris$Petal.Length,iris$Species,summary)
+```
+#Visualize the differences in continuous variables between categories using Box-and-whisker plot
+```{r}
+boxplot(iris$Sepal.Length~iris$Species,data=iris, main="Comparison of categorical vs quantitative")
+```
+#Relationship between two categorical variables
+```{r}
+ucba<-data.frame(UCBAdmissions)
+ucba
+```
+
+
+```{r}
+cross<-xtabs(Freq~Gender+Admit,data=ucba)
+(cross<-xtabs(Freq~Gender+Admit,data=ucba))
+```
+## checking gender bias in UCB graduate admission process
+```{r}
+prop.table(cross,1)
+```
+##Simpson’s paradox
+#Phenomenon, where a trend that appears in combined groups of data disappears or reverses when broken down into groups.
+
+```{r}
+cross2<-xtabs(Freq~Gender+Admit,data=ucba[ucba$Dept=="F",])
+prop.table(cross2,1)
+```
+##Bar Chart
+```{r}
+dat <- read.table(text ="ProdA ProdB ProdC ProdD
+1 110 50 60 70 
+2 120 50 80 65", header= TRUE)
+
+  barplot(as.matrix(dat),beside=TRUE,col=c("Red","green"))
+```
+##barplot(as.matrix(dat),beside=TRUE,col=c("gold3","red"))
+
+```{r}
+dat <- read.table(text = "A   B   C   D   E   F    G
+1 10 80 30 90 70 60  90
+2 20 50 70 50 40 10  40
+3 60 80 80 60  60 30 160
+4 20 40 70 80 20 10  70", header = TRUE)
+
+barplot(as.matrix(dat))
+```
+
+#Scatter Plot
+```{r}
+plot(WEIGHT~HEIGHT,data=data_class)
+```
+
+```{r}
+plot(data_class$HEIGHT,data_class$WEIGHT)
+```
+#Correlation 
+```{r}
+cor(data_class$HEIGHT,data_class$WEIGHT)
+```
+#Linear models
+```{r}
+plot(WEIGHT~HEIGHT,data=data_class)
+abline(lm(WEIGHT~HEIGHT,data=data_class)$coefficient)
+```
+
+
+```{r}
+data_lm<-lm(HEIGHT~WEIGHT,data=data_class)
+summary(data_lm)
+```
+```{r}
+plot(data_lm)
+```
+#Histogram
+```{r}
+hist(data_class$HEIGHT)
+```
+#Histogram using colour
+```{r}
+hist(data_class$WEIGHT,col = "steelblue")
+```
+#Linear with other line
+```{r}
+plot(WEIGHT~HEIGHT,data=data_class)
+abline(lm(WEIGHT~HEIGHT,data=data_class)$coefficient)
+lines(lowess(data_class$HEIGHT,data_class$WEIGHT),col="blue")
+```
+
+```{r}
+cor(data_class$HEIGHT,data_class$WEIGHT)
+```
+
+
+```{r}
+lm(WEIGHT~HEIGHT,data=data_class)
+```
+##Data management
+#Creating another Variable called BMI using data_class
+```{r}
+attach(data_class)
+(BMI<-WEIGHT/(HEIGHT/100)^2)
+```
+#rounding each BMI result to 2 decimal places
+```{r}
+(BMI<-round(WEIGHT/(HEIGHT/100)^2,digit=2))
+```
+
+#Putting or inding the new BMI column onto data_class as an extra column on the right, showing only 5 first rows
+```{r}
+head(cbind(data_class,BMI),n=5)
+```
+#putting the BMI as another column on the whole dataset(data_class)
+```{r}
+cbind(data_class,BMI)
+```
+
+#Summary statistics of BMI
+```{r}
+summary(BMI)
+```
+#checking where there is decimal numbers 
+```{r}
+stem(BMI,scale=2)
+```
+#DATE
+```{r}
+ today <- Sys.Date()
+ format(today, format="%B %d %Y")
+```
+#DAY
+```{r}
+ format(today, format="%A")
+```
+
+#Checking how long someone have been in the world
+```{r}
+today <- Sys.Date()
+ dob <- as.Date("2001-10-05")
+ #today<-as.Date("2026-11-12")
+ difftime(today, dob, units="days")
+```
+##Subsetting
+#Creation of leadership data Interest: How men and women differ in the way they lead their organizations. 5 questions were asked in this study. Example of the question: Do men and women in management position differ in the degree to which they defer to superiors? 1: strongly disagree, 2: disagree, 3:neither agree nor disagree,4: agree, 5: strongly agree
+```{r}
+manager <- c(1,2,3,4,5)
+country<- c("US","UAE","UK","US","UK")
+gender<-c("M","M","F","M","F")
+age<-c(32,45,25,40,99)
+q1<-c(5,3,3,3,2)
+q2<-c(4,5,5,3,2)
+q3<-c(5,2,5,4,1)
+q4<-c(5,5,5,NA,2)
+q5<-c(5,5,2,NA,1)
+leadership<-data.frame(manager,country, gender, age, q1,q2,q3,q4,q5, stringsAsFactors = TRUE)
+leadership<-data.frame(manager,country, gender, age, q1,q2,q3,q4,q5)
+str(leadership)
+```
+#Displaying the variable names
+```{r}
+names(leadership)
+```
+#Missing values
+```{r}
+leadership$age[leadership$age==99]<-NA
+View(leadership)
+```
+
+```{r}
+leadership$agecat[leadership$age >75]<-"Elder"
+leadership$agecat[leadership$age>=35 & leadership$age<=75]<-"Middle Aged"
+leadership$agecat[leadership$age <35]<- "Young"
+```
+
+##one way of handling missing values
+#Deleting all observations with missing data ( Listwise deletion) is one of the several methods of handling incomplete datasets. Note: You can also replacing the missing value by the average of the remaining data
+
+```{r}
+is.na(leadership[,5:9])
+```
+#New dataset after removing missing value
+```{r}
+new_data<-na.omit(leadership)
+new_data
+```
+
+#Sorting
+```{r}
+order(leadership$age)
+```
+
+```{r}
+new_data2<-leadership[order(leadership$age),]
+```
+
+###Merging data sets
+##To merge two data frame horizontally, you use merge() function. In most cases, two data frames are joined by one or more common key variables. -example 1: merge(dataframeA, dataframeB,by=“ID”) -example 2: merge(dataframeA,dataframeB, by=c(“ID”,“country”))
+
+#the second merge the two dataframes by ID and country
+
+#To join two data frame( datasets) vertically, use rbind() function: Note that the two data set must have the same variables
+
+#Subset (selecting variables,dropping variables,selecting observation)
+```{r}
+new_data3<-leadership[,c(5:9)]
+myvars<-c("q1","q2","q3","q4","q5")
+(new_data3<-leadership[myvars])
+```
+```{r}
+new_data4<-leadership[,c(-1,-2)]
+(new_data4<-leadership[,-(1:5)])
+```
+
+
+```{r}
+new_data5<-leadership[,c(-1,-7)]
+leadership[[4]]
+```
+
+
+```{r}
+new_data6<-leadership[c(-1,-3),]
+new_data6<-leadership[c(2,4,5),]
+new_data7<-subset(leadership,age>=35|age<24,select=c(q1,q2,q3,q4,q5))
+```
+
+
+```{r}
+attach(leadership)
+```
+
+#new_data7<-leadership[gender="M" & age>30,]
+
+```{r}
+(new_data7<-leadership[gender=="M" & age>30,])
+```
+
+
+
+
+
