@@ -1,0 +1,137 @@
+
+##Geom package and variations
+
+```{r}
+library(ggplot2)
+exists("geom_point")           # TRUE once ggplot2 is loaded
+ls("package:ggplot2", pattern = "^geom_")   # lists all geoms available
+```
+
+#using mtcars dataset to apply geom_point, geom_smooth, geom_boxplot
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point()
+```
+
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_smooth()
+```
+
+##Using geom_smooth alone
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+#Using geom_boxplot to summarizes the distribution of a numeric variable, usually split by a categorical variable. It shows the median, spread, and outliers in one compact shape.
+
+```{r}
+ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_boxplot()
+```
+
+##geom_histogram() splits the values into bins and draws a bar for each bin’s count
+#how to use it using iris dataset
+```{r}
+library(ggplot2)
+
+# Basic histogram
+ggplot(iris, aes(x = Petal.Length)) +
+  geom_histogram()
+
+# Control the number of bins and style
+ggplot(iris, aes(x = Petal.Length)) +
+  geom_histogram(bins = 20, fill = "steelblue", color = "white")
+
+# Or set the bin width directly
+ggplot(iris, aes(x = Petal.Length)) +
+  geom_histogram(binwidth = 0.25, fill = "steelblue", color = "white")
+
+# Color by species (stacked by default)
+ggplot(iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(bins = 25, color = "white")
+
+# Overlapping instead of stacked
+ggplot(iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(bins = 25, alpha = 0.6, position = "identity")
+
+# One panel per species
+ggplot(iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(bins = 20, color = "white") +
+  facet_wrap(~ Species)
+```
+
+#geom_density() draws a smooth curve estimating the shape of the distribution.
+```{r}
+# Basic density curve
+ggplot(iris, aes(x = Petal.Length)) +
+  geom_density()
+
+# Filled and styled
+ggplot(iris, aes(x = Petal.Length)) +
+  geom_density(fill = "orange", alpha = 0.5, color = "darkred")
+
+# One curve per species
+ggplot(iris, aes(x = Petal.Length, fill = Species)) +
+  geom_density(alpha = 0.5)
+
+# Smoother or wigglier curve
+ggplot(iris, aes(x = Petal.Length)) +
+  geom_density(adjust = 2)     # larger = smoother
+```
+
+##Geom_line used for trends over time or any ordered sequence
+#how to use it by using airquality: one month
+```{r}
+may <- subset(airquality, Month == 5)
+
+ggplot(may, aes(x = Day, y = Temp)) +
+  geom_line()
+```
+#one line per month
+```{r}
+# Month is numeric, so convert to factor
+ggplot(airquality, aes(x = Day, y = Temp, color = factor(Month))) +
+  geom_line()
+
+# Or use separate panels
+ggplot(airquality, aes(x = Day, y = Temp)) +
+  geom_line() +
+  facet_wrap(~ Month)
+```
+
+#Full time series with a real date
+
+```{r}
+airquality$Date <- as.Date(paste(1973, airquality$Month, airquality$Day, sep = "-"))
+
+ggplot(airquality, aes(x = Date, y = Temp)) +
+  geom_line(color = "blue")
+```
+
+##geom_violin() draws a mirrored density curve for each group. The width of the shape at any height shows how many observations fall around that value. It combines the idea of a boxplot (comparing groups) with a density plot (showing the full shape)
+
+#Applying it on ToothGrowth dataset built in R
+```{r}
+head(ToothGrowth)
+tail(ToothGrowth)
+str(ToothGrowth)
+```
+
+```{r}
+ggplot(ToothGrowth, aes(x = factor(dose), y = len, fill = factor(dose))) +
+  geom_violin(trim = FALSE, alpha = 0.7) +
+  geom_boxplot(width = 0.12, fill = "white") +
+  labs(title = "Tooth Length by Vitamin C Dose",
+       x = "Dose (mg/day)",
+       y = "Tooth Length") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+
+
+
+
+
