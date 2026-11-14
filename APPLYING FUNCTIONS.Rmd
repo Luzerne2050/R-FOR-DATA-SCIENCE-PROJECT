@@ -1,0 +1,186 @@
+
+##Applying functions to matrices and data frame
+```{r}
+a<-9
+sqrt(9)
+```
+
+```{r}
+b<- c(1,243,5.754,2.987)
+round(b)
+```
+
+```{r}
+c<-matrix(runif(12),nrow=3)
+c
+```
+#Applying logarithm to matrix c
+```{r}
+log(c)
+```
+
+#Average of c
+```{r}
+mean(c)
+```
+
+```{r}
+sqrt1<-function(x){
+  x^(1/2)
+}
+```
+
+#lappy function
+```{r}
+fix_missing<-function(x){
+  x[x==-99]<-NA
+  x
+}
+function1<-function(x){
+  x^2
+}
+
+curve(function1,-4,4)
+```
+
+##sapply
+#sapply() and vapply(), variants of lapply() that produces vectors,matrices, and arrays as Output, instead of lists map(), and mapply which iterate over multiple input data structures in parallel
+
+#
+Another important function when dealing with big data is split() -tapply
+
+#Using Titanic data built in R
+```{r}
+str(Titanic)
+```
+#Applying apply to titanic data
+```{r}
+View(Titanic)
+apply(Titanic,c(1,3),sum )
+```
+
+```{r}
+options(digits = 2)
+apply(Titanic,c(1,2),sum)[3:4,]
+```
+
+```{r}
+apply(Titanic,c(1,4),sum)[3:4,]
+```
+
+```{r}
+apply(Titanic,c(1,2,4),sum)
+```
+#apply(Titanic,c(1,2,4),sum)[3:4,]
+```{r}
+apply(Titanic,c(1,2,4),sum)[3:4,,]
+```
+
+```{r}
+ftable(apply(Titanic,c(1,4,2),sum)[3:4,,])
+```
+
+```{r}
+ftable(apply(Titanic,c(1,4,2),sum)[3:4,,])[1:2,]
+```
+
+```{r}
+ftable(apply(Titanic,c(1,4,2),sum)[3:4,,])[3:4,]
+```
+
+```{r}
+digit=2
+prop.table(ftable(apply(Titanic,c(1,4,2),sum)[3:4,,])[1:2,], margin = 1)
+```
+
+```{r}
+prop.table(ftable(apply(Titanic,c(1,4,2),sum)[3:4,,])[3:4,], margin = 2)
+```
+
+```{r}
+matrix(prop.table(ftable(apply(Titanic,c(1,4,2),sum)[3:4,,])[1:2,], margin = 2),nrow = 2, dimnames = list(dimnames(Titanic)$Survived,dimnames(Titanic)$Sex))
+```
+
+```{r}
+matrix(prop.table(ftable(apply(Titanic,c(1,4,2),sum)[3:4,,])[3:4,], margin = 2),nrow = 2, dimnames = list(dimnames(Titanic)$Survived,dimnames(Titanic)$Sex))
+```
+
+#Creating dataset
+```{r}
+Student<-c("John Bosco", "Ange Akeza", "Bruce Ineza","Alexis Ganza", "Chance Rukundo", "Joel Kagabo", "Mary Umutoni")
+Math<-c(600,419,350,495,540,410,560)
+Science<-c(95,90,85,87,79,82,74)
+English<-c(25,22,18,20,29,30,27)
+roster<-data.frame(Student,Math,Science,English,stringsAsFactors = FALSE)
+```
+
+##standardize variables and obtains the performance scores because they are reported on different scale( With widely differing means and standard deviations, we need to make them comparable before we combine them.)
+```{r}
+z<-scale(roster[,2:4])
+```
+
+##performance of each students using rowmeans and adding them to roster using cbind()
+```{r}
+score<-apply(z,1,mean)
+roster<-cbind(roster,score)
+```
+
+##Grades  the students: quantile function gives the percentile rank of each student's performance score check the cutoff of A
+```{r}
+y<-quantile(score,c(.8,.6,.4,.2))
+```
+
+## create a grade variable us
+```{r}
+roster$grade[score>=y[1]]<-"A"
+roster$grade[score<y[1]&score>=y[2]]<-"B"
+roster$grade[score<y[2]& score>=y[3]]<-"C"
+roster$grade[score<y[3]& score>=y[4]]<-"D"
+roster$grade[score<y[4]]<-"F"
+```
+
+##Dealing with names 
+```{r}
+name<-strsplit((roster$Student),"")
+lastname<-sapply (name,"[",2)
+firstname<-sapply(name,"[",1)
+roster<-cbind(firstname, lastname,roster[,-1])
+roster<-roster[order(lastname,firstname),]
+roster
+```
+
+##Aggregation and reshaping
+#transpose
+```{r}
+cars<-mtcars[1:5, 1:4]
+cars
+```
+
+```{r}
+t(cars)
+```
+
+##aggregate data
+#aggregate() collapse data in R using one or more by variables and a defined function
+
+```{r}
+options(digits=3)
+attach(mtcars)
+aggdata<-aggregate(mtcars,by=list(cyl,gear),FUN=mean,na.rm=TRUE)
+```
+
+##Reshape
+#Step 1: install the package reshape2 step 2: melt data step 3: Cast the melted data into any shape you desire
+
+#During the cast, you can aggregate the data with any function you wis
+
+```{r}
+id<-c(1,1,2,2)
+time<-c(1,2,1,2)
+x1<-c(5,3,6,2)
+x2<-c(6,5,1,4)
+mydata<-data.frame(id,time,x1,x2)
+```
+
+
+
