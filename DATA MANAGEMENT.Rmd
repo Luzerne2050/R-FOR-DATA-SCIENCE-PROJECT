@@ -1,0 +1,132 @@
+---
+title: "DATA MANAGEMENT"
+author: "ELI"
+date: "2026-11-07"
+output: html_document
+---
+
+###Data management using dpylr package
+
+##Exploring mtcars dataset
+```{r}
+library(dplyr)
+data(mtcars)
+head(mtcars)
+tail(mtcars)
+str(mtcars)
+summary(mtcars)
+```
+
+#Select: choosing columns
+```{r}
+cars <- mtcars %>% tibble::rownames_to_column("car")
+cars %>% select(car, mpg, cyl, hp)
+cars %>% select(-qsec, -vs)             # drop columns
+cars %>% select(car, starts_with("d"))  # by name pattern
+cars %>% select(where(is.numeric))      # by type
+```
+
+
+#Filter: keeping rows that meet with conditions
+```{r}
+cars %>% filter(mpg > 25)
+cars %>% filter(cyl == 4, hp > 80)          # AND
+cars %>% filter(cyl == 4 | cyl == 6)        # OR
+cars %>% filter(cyl %in% c(4, 6))
+cars %>% filter(between(mpg, 20, 30))
+```
+
+#Arrange: sorting rows
+```{r}
+cars %>% arrange(mpg)            # ascending
+cars %>% arrange(desc(hp))       # descending
+cars %>% arrange(cyl, desc(mpg)) # by several columns
+```
+
+#Mutate: creating or modifying columns
+```{r}
+cars <- cars %>%
+  mutate(
+    wt_kg     = wt * 453.6,                      # wt is in 1000 lbs
+    kpl       = mpg * 0.425,                     # km per litre
+    hp_per_wt = hp / wt,
+    cyl       = factor(cyl),
+    am        = factor(am, levels = c(0, 1), labels = c("Automatic", "Manual")),
+    efficiency = case_when(
+      mpg >= 25 ~ "High",
+      mpg >= 18 ~ "Medium",
+      TRUE      ~ "Low"
+    ))
+```
+
+#Rename: changing columns name
+```{r}
+cars <- cars %>% rename(miles_per_gallon = mpg, horsepower = hp)
+```
+
+#Group_by()+ summarize(): summarising by group
+```{r}
+cars %>%
+  group_by(cyl) %>%
+  summarise(
+    n        = n(),
+    mean_mpg = mean(miles_per_gallon),
+    sd_mpg   = sd(miles_per_gallon),
+    max_hp   = max(horsepower)
+  )
+
+# Two grouping variables
+cars %>%
+  group_by(cyl, am) %>%
+  summarise(mean_mpg = mean(miles_per_gallon), .groups = "drop")
+
+# Summarise many columns at once
+cars %>%
+  group_by(cyl) %>%
+  summarise(across(c(miles_per_gallon, horsepower, wt), mean))
+```
+
+#Counting and ranking
+```{r}
+cars %>% count(cyl)
+cars %>% count(cyl, am, sort = TRUE)
+
+cars %>% slice_max(miles_per_gallon, n = 5)   # top 5 by mpg
+cars %>% slice_min(horsepower, n = 3)         # lowest 3 by hp
+cars %>% slice_sample(n = 5)                  # random 5 rows
+
+cars %>% mutate(rank = min_rank(desc(miles_per_gallon)))
+```
+
+#Data cleaning
+```{r}
+cars %>% distinct(cyl, gear)                # unique combinations
+sum(duplicated(cars))                       # duplicate rows
+cars %>% filter(!is.na(miles_per_gallon))   # remove missing values
+colSums(is.na(cars))                        # missing values per column
+```
+
+
+#Joining data: Creating a small lookup table and merge it
+
+```{r}
+origin <- data.frame(
+  cyl    = factor(c(4, 6, 8)),
+  engine = c("Small", "Medium", "Large")
+)
+
+cars %>%
+  left_join(origin, by = "cyl") %>%
+  select(car, cyl, engine)
+```
+
+
+
+
+
+
+
+
+
+
+
